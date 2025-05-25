@@ -95,7 +95,6 @@ public class JpaTodoService implements TodoService {
         try {
             return todoRepo.findAll(
                     Specification.where(TodoSpecification.hasCategoryId(filters.getCategoryId()))
-                            .and(TodoSpecification.hasCategoryId(filters.getCategoryId()))
                             .and(TodoSpecification.isCreatedAfter(filters.getCreatedAt()))
                             .and(TodoSpecification.isDueDateEqualTo(filters.getDueDate()))
                             .and(TodoSpecification.isCompleted(filters.getStatus()))

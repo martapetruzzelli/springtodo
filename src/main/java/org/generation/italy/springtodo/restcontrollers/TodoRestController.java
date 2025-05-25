@@ -6,6 +6,7 @@ import org.generation.italy.springtodo.models.searchCriteria.TodoFilterCriteria;
 import org.generation.italy.springtodo.models.services.TodoService;
 import org.generation.italy.springtodo.restdtos.TodoRestDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -28,12 +29,12 @@ public class TodoRestController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findTodos(@RequestParam(required = false) Integer categoryId,
-                                       @RequestParam(required = false) LocalDateTime createdAt,
+    public ResponseEntity<?> findTodos(@RequestParam(required = false) Integer category,
+                                       @RequestParam(required = false)@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAt,
                                        @RequestParam(required = false) LocalDate dueDate,
                                        @RequestParam(required = false) Boolean status) throws DataException{
 
-        TodoFilterCriteria filters = new TodoFilterCriteria(categoryId, createdAt, dueDate, status);
+        TodoFilterCriteria filters = new TodoFilterCriteria(category, createdAt, dueDate, status);
         List<TodoRestDto> todos = todoService.searchTodos(filters).stream().map(TodoRestDto::toDto).toList();
         return ResponseEntity.ok(todos);
     }
@@ -49,7 +50,7 @@ public class TodoRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Integer id) throws DataException {
+    public ResponseEntity<Void> deleteTodoById(@PathVariable Integer id) throws DataException {
         boolean deleted = todoService.deleteTodoById(id);
         if(deleted){
             return ResponseEntity.noContent().build();
@@ -58,7 +59,7 @@ public class TodoRestController {
     }
 
     @PostMapping
-    public ResponseEntity<TodoRestDto> createProduct(@RequestBody TodoRestDto dto) throws DataException {
+    public ResponseEntity<TodoRestDto> createTodo(@RequestBody TodoRestDto dto) throws DataException {
         Todo t = dto.toTodo();
         todoService.saveTodo(t, dto.getCategoryId());
         TodoRestDto saved = TodoRestDto.toDto(t);
@@ -72,7 +73,7 @@ public class TodoRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody TodoRestDto dto) throws DataException {
+    public ResponseEntity<?> updateTodo(@PathVariable Integer id, @RequestBody TodoRestDto dto) throws DataException {
         if(id != dto.getTodoId()){
             return ResponseEntity.badRequest().body("L'id del path non corrisponde all'id del dto");
         }

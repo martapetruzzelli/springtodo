@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 
 public class TodoFilterCriteria {
     private Integer categoryId;
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
     private LocalDate dueDate;
     private Boolean status;
 
-    public TodoFilterCriteria(Integer categoryId, LocalDateTime createdAt, LocalDate dueDate, Boolean status) {
+    public TodoFilterCriteria(Integer categoryId, LocalDate createdAt, LocalDate dueDate, Boolean status) {
         this.categoryId = categoryId;
         this.createdAt = createdAt;
         this.dueDate = dueDate;
@@ -20,7 +20,7 @@ public class TodoFilterCriteria {
         return categoryId;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 

@@ -19,7 +19,7 @@ public class TodoSpecification {
         };
     }
 
-    public static Specification<Todo> isCreatedAfter(LocalDateTime createdAt){
+    public static Specification<Todo> isCreatedAfter(LocalDate createdAt){
         return(root, query, builder) -> {
             if(createdAt == null) {
                 return builder.conjunction();
