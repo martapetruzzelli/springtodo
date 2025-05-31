@@ -61,6 +61,7 @@ public class TodoRestController {
     @PostMapping
     public ResponseEntity<TodoRestDto> createTodo(@RequestBody TodoRestDto dto) throws DataException {
         Todo t = dto.toTodo();
+        t.setCreatedAt(LocalDateTime.now());
         todoService.saveTodo(t, dto.getCategoryId());
         TodoRestDto saved = TodoRestDto.toDto(t);
         URI location = ServletUriComponentsBuilder
@@ -83,6 +84,23 @@ public class TodoRestController {
         }
         Todo t = dto.toTodo();
         Todo updated = todoService.updateTodo(t, dto.getCategoryId());
+        return ResponseEntity.ok(TodoRestDto.toDto(updated));
+    }
+
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<?> toggleComplete(@PathVariable Integer id) throws DataException {
+        Optional<Todo> ot = todoService.findTodoById(id);
+        if(ot.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        Todo t = ot.get();
+        t.setStatus(!t.getStatus());
+        if(t.getCompletedAt() == null){
+            t.setCompletedAt(LocalDateTime.now());
+        } else {
+            t.setCompletedAt(null);
+        }
+        Todo updated = todoService.updateTodo(t, t.getCategory().getCategoryId());
         return ResponseEntity.ok(TodoRestDto.toDto(updated));
     }
 }
